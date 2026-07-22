@@ -26,6 +26,7 @@ spec:
       containers:
         - name: broker
           image: apache/kafka:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9092
           env:
@@ -84,6 +85,7 @@ spec:
       containers:
         - name: discovery-server
           image: raquibulhasharshad/payflow-discovery-server:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8761
           envFrom:
@@ -122,6 +124,7 @@ spec:
       containers:
         - name: api-gateway
           image: raquibulhasharshad/payflow-api-gateway:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           envFrom:
@@ -160,6 +163,7 @@ spec:
       containers:
         - name: auth-service
           image: raquibulhasharshad/payflow-auth-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
           envFrom:
@@ -198,6 +202,7 @@ spec:
       containers:
         - name: wallet-service
           image: raquibulhasharshad/payflow-wallet-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8082
           envFrom:
@@ -236,6 +241,7 @@ spec:
       containers:
         - name: transaction-service
           image: raquibulhasharshad/payflow-transaction-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8083
           envFrom:
@@ -274,6 +280,7 @@ spec:
       containers:
         - name: rewards-service
           image: raquibulhasharshad/payflow-rewards-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8084
           envFrom:
@@ -312,6 +319,7 @@ spec:
       containers:
         - name: notification-service
           image: raquibulhasharshad/payflow-notification-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8085
           envFrom:
@@ -350,6 +358,7 @@ spec:
       containers:
         - name: frontend
           image: raquibulhasharshad/payflow-frontend:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
 
