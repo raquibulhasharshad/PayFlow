@@ -6,6 +6,7 @@ data:
   TZ: "Asia/Kolkata"
   KAFKA_BOOTSTRAP_SERVERS: "broker-service:9092"
   EUREKA_SERVER_URL: "http://discovery-service:8761/eureka/"
+  JAVA_TOOL_OPTIONS: "-Xmx128m -Xms64m -XX:+UseG1GC"
 
 ---
 # Kafka Broker Service
