@@ -59,7 +59,7 @@ pipeline {
                     // Force rollout restart to fetch new images
                     def services = ['discovery-server', 'api-gateway', 'auth-service', 'wallet-service', 'transaction-service', 'rewards-service', 'notification-service', 'frontend']
                     services.each { name ->
-                        sh "sudo kubectl rollout restart deployment/${name}"
+                        sh "sudo kubectl rollout restart deployment/${name} && sudo kubectl rollout status deployment/${name}"
                     }
                 }
             }
