@@ -27,6 +27,8 @@ services:
     container_name: discovery-server
     ports:
       - "8761:8761"
+    environment:
+      - TZ=Asia/Kolkata
 
   api-gateway:
     build:
@@ -36,6 +38,7 @@ services:
       - "8080:8080"
     environment:
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - TZ=Asia/Kolkata
     depends_on:
       - discovery-server
 
@@ -48,6 +51,7 @@ services:
     environment:
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
       - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+      - TZ=Asia/Kolkata
     depends_on:
       - discovery-server
       - broker
@@ -61,6 +65,7 @@ services:
     environment:
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
       - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+      - TZ=Asia/Kolkata
     depends_on:
       - discovery-server
       - broker
@@ -74,6 +79,7 @@ services:
     environment:
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
       - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+      - TZ=Asia/Kolkata
     depends_on:
       - discovery-server
       - broker
@@ -87,6 +93,7 @@ services:
     environment:
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
       - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+      - TZ=Asia/Kolkata
     depends_on:
       - discovery-server
       - broker
@@ -100,6 +107,16 @@ services:
     environment:
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
       - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+      - TZ=Asia/Kolkata
     depends_on:
       - discovery-server
       - broker
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-gateway
