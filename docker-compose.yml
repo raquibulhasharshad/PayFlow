@@ -20,3 +20,86 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+
+  discovery-server:
+    build:
+      context: ./Backend/discovery-server
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+
+  api-gateway:
+    build:
+      context: ./Backend/api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+
+  auth-service:
+    build:
+      context: ./Backend/auth-service
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+    depends_on:
+      - discovery-server
+      - broker
+
+  wallet-service:
+    build:
+      context: ./Backend/wallet-service
+    container_name: wallet-service
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+    depends_on:
+      - discovery-server
+      - broker
+
+  transaction-service:
+    build:
+      context: ./Backend/transaction-service
+    container_name: transaction-service
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+    depends_on:
+      - discovery-server
+      - broker
+
+  rewards-service:
+    build:
+      context: ./Backend/rewards-service
+    container_name: rewards-service
+    ports:
+      - "8084:8084"
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+    depends_on:
+      - discovery-server
+      - broker
+
+  notification-service:
+    build:
+      context: ./Backend/notification-service
+    container_name: notification-service
+    ports:
+      - "8085:8085"
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+    depends_on:
+      - discovery-server
+      - broker
