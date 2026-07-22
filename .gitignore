@@ -1,0 +1,22 @@
+# Target/Build folders
+**/target/
+**/dist/
+**/node_modules/
+
+# IDE configurations
+.settings/
+.vscode/
+.classpath
+.project
+.factorypath
+*.iml
+*.ipr
+*.iws
+
+# Logs
+*.log
+logs/
+
+# Local/OS files
+.DS_Store
+Thumbs.db

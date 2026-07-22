@@ -1,0 +1,13 @@
+@media (max-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+}
+
+@media (max-width: 580px) {
+  .sub-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+}
