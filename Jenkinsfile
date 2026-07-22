@@ -54,12 +54,12 @@ pipeline {
             steps {
                 script {
                     echo "Applying Kubernetes manifests..."
-                    sh "kubectl apply -f k8s-deployment.yaml"
+                    sh "sudo kubectl apply -f k8s-deployment.yaml"
                     
                     // Force rollout restart to fetch new images
                     def services = ['discovery-server', 'api-gateway', 'auth-service', 'wallet-service', 'transaction-service', 'rewards-service', 'notification-service', 'frontend']
                     services.each { name ->
-                        sh "kubectl rollout restart deployment/${name}"
+                        sh "sudo kubectl rollout restart deployment/${name}"
                     }
                 }
             }
