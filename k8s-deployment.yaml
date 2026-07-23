@@ -6,7 +6,7 @@ data:
   TZ: "Asia/Kolkata"
   KAFKA_BOOTSTRAP_SERVERS: "broker-service:9092"
   EUREKA_SERVER_URL: "http://discovery-service:8761/eureka/"
-  JAVA_TOOL_OPTIONS: "-Xmx128m -Xms64m -XX:+UseG1GC"
+  JAVA_TOOL_OPTIONS: "-Xmx128m -Xms64m -XX:+UseSerialGC"
 
 ---
 # Kafka Broker Service
@@ -31,6 +31,10 @@ spec:
           ports:
             - containerPort: 9092
           env:
+            - name: KAFKA_HEAP_OPTS
+              value: "-Xmx256m -Xms128m"
+            - name: KAFKA_JVM_PERFORMANCE_OPTS
+              value: "-server -XX:+UseSerialGC"
             - name: KAFKA_BROKER_ID
               value: "1"
             - name: KAFKA_PROCESS_ROLES
@@ -53,6 +57,7 @@ spec:
               value: "1"
             - name: CLUSTER_ID
               value: "MkU3OEVBNTcwNTJENDM2Qk"
+
 
 ---
 apiVersion: v1
