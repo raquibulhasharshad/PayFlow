@@ -58,6 +58,10 @@ PayFlow is a high-performance, microservices-based digital wallet and peer-to-pe
 * **Apache Kafka**: Event streaming bus for async message communication.
 * **PostgreSQL (Neon Cloud)**: Relational databases for transaction and user accounts storage.
 
+### Containerization & Orchestration
+* **Docker**: Packages backend and frontend applications into lightweight, isolated, and immutable container images.
+* **K3s (Kubernetes)**: Orchestrates the production containers inside the EC2 instance, managing scaling, resource constraints, self-healing restarts, and internal pod networking.
+
 ---
 
 ## 🚀 Running the Project Locally
