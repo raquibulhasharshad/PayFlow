@@ -83,31 +83,53 @@ Once started, you can access:
 
 ## ☁️ Cloud Deployment Architecture (AWS + K8s + Jenkins)
 
-For hosting this project on the cloud for **100% free**, the following setup is configured:
+For hosting this project in production with maximum stability and performance, the following cloud infrastructure is configured:
 
 ### 1. Virtual Machine (AWS EC2)
-* We utilize a free-tier **EC2 instance (`t2.micro` / `t3.micro`)** running Linux in the AWS cloud. 
-* There is no local server installation required. All tools run on this cloud instance.
+* **Instance Type:** `c7i-flex.large` (2 vCPU, 4 GiB Memory) – Free Tier Eligible.
+* **Storage:** 30 GB EBS gp3 SSD root volume.
+* **Virtual Memory (Swap):** 3.0 GiB Swap space configured to provide **7.0 GiB of total memory**, completely eliminating disk thrashing and server freezes.
 
-### 2. Lightweight Kubernetes (K3s)
-* K3s is installed inside the EC2 instance. It acts as our production Kubernetes cluster.
-* Applying the deployment manifest launches all 9 containers (services, databases, Kafka, and frontend):
-  ```bash
-  kubectl apply -f k8s-deployment.yaml
-  ```
+### 2. Lightweight Kubernetes (K3s) & Traefik Ingress
+* **Orchestration:** K3s running inside the EC2 instance acts as the production Kubernetes cluster.
+* **Ingress Routing:** Traefik serves public HTTP traffic on port `80`, routing:
+  * `/` (Root) ──► `frontend-service`
+  * `/api` (Backend endpoints) ──► `api-gateway-service`
+* **Network Resolution:** All microservices register with Eureka using their **internal cluster IP addresses** (`prefer-ip-address=true`) to guarantee instant routing resolution.
 
-### 3. CI/CD Pipeline (Jenkins)
-* A Jenkins server runs inside the EC2 instance.
-* Upon pushing code to GitHub, Jenkins reads the [Jenkinsfile](file:///d:/Payment%20Project/Jenkinsfile), builds the microservices, uploads the Docker containers to **Amazon ECR** (Elastic Container Registry), and updates the Kubernetes pods automatically.
+### 3. Production CI/CD Pipeline (Jenkins)
+* **Local Registry Bypass:** To optimize network bandwidth and storage, Jenkins builds the Docker images locally and imports them directly into the K3s container runtime image store (`k3s ctr images import`) instead of pushing to an external registry.
+* **Memory Optimization:**
+  * All Spring Boot applications run with optimized JVM parameters: `-Xmx128m -Xms64m -XX:+UseSerialGC`.
+  * Kafka broker runs with capped Heap and GC options: `-Xmx256m -Xms128m -XX:+UseSerialGC`.
+* **Zero-Downtime Rollout:** The pipeline performs sequential rolling restarts (`kubectl rollout restart`), waiting for each service to be healthy before proceeding to the next, guaranteeing zero downtime.
 
 ---
 
-## 🛠️ Developer Commands Reference
+## 🛠️ Deployment & Maintenance Commands Reference
 
-### Push Code to GitHub manually
-Run these commands in your VS Code terminal to save and push your changes:
+### Triggering a New Build
+Whenever you commit and push new code to GitHub:
 ```bash
 git add .
-git commit -m "Add responsive sidebar, Docker configurations, Kubernetes manifests, and Jenkins pipeline"
+git commit -m "Your commit message"
 git push
+```
+Go to your Jenkins dashboard at `http://YOUR_SERVER_IP:8080` and click **Build Now**. The pipeline will automatically rebuild, test, import, and rollout the updates.
+
+### Monitoring Commands
+Run these inside your EC2 terminal to monitor your deployment:
+```bash
+# Check the status of all pods
+sudo kubectl get pods -A
+
+# Check logs for a specific service
+sudo kubectl logs deployment/auth-service --tail=100
+
+# Reclaim disk space by cleaning up old Docker build cache (run after builds)
+sudo docker system prune -af
+
+# Check memory and disk usage
+free -h
+df -h
 ```
